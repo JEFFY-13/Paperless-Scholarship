@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paperless Scholarship System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #000;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .form-input {
+            margin: 5px 0;
+            padding: 8px;
+            width: 100%;
+        }
+        .form-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Paperless Scholarship System</h2>
+
+        <h3>Add Student Information</h3>
+        <input type="text" id="name" class="form-input" placeholder="Enter name">
+        <input type="text" id="gender" class="form-input" placeholder="Enter gender (M/F)">
+        <input type="number" id="hscMark" class="form-input" placeholder="Enter HSC marks">
+        <input type="number" id="parentIncome" class="form-input" placeholder="Enter parent income">
+        <input type="number" id="aadharNo" class="form-input" placeholder="Enter Aadhar number">
+        <input type="number" id="accountNo" class="form-input" placeholder="Enter account number">
+        <button class="form-button" onclick="addStudent()">Add Student</button>
+
+        <h3>Student List</h3>
+        <table id="studentTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>HSC Marks</th>
+                    <th>Parent Income</th>
+                    <th>Aadhar No</th>
+                    <th>Account No</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h3>Search Student</h3>
+        <input type="text" id="searchName" class="form-input" placeholder="Enter name to search">
+        <button class="form-button" onclick="searchStudent()">Search</button>
+
+        <h3>Delete Student</h3>
+        <input type="text" id="deleteName" class="form-input" placeholder="Enter name to delete">
+        <button class="form-button" onclick="deleteStudent()">Delete Student</button>
+
+        <h3>Modify Student</h3>
+        <input type="text" id="modifyName" class="form-input" placeholder="Enter current name to modify">
+        <input type="text" id="newName" class="form-input" placeholder="Enter new name">
+        <button class="form-button" onclick="modifyStudent()">Modify Student</button>
+    </div>
+
+    <script>
+        let students = [];
+
+        function addStudent() {
+            const name = document.getElementById("name").value;
+            const gender = document.getElementById("gender").value;
+            const hscMark = document.getElementById("hscMark").value;
+            const parentIncome = document.getElementById("parentIncome").value;
+            const aadharNo = document.getElementById("aadharNo").value;
+            const accountNo = document.getElementById("accountNo").value;
+
+            const student = {
+                name,
+                gender,
+                hscMark,
+                parentIncome,
+                aadharNo,
+                accountNo
+            };
+
+            students.push(student);
+            displayStudents();
+            clearInputs();
+        }
+
+        function displayStudents() {
+            const tableBody = document.getElementById("studentTable").getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+
+            students.forEach((student, index) => {
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td>${student.gender}</td>
+                    <td>${student.hscMark}</td>
+                    <td>${student.parentIncome}</td>
+                    <td>${student.aadharNo}</td>
+                    <td>${student.accountNo}</td>
+                    <td>
+                        <button onclick="deleteStudentAtIndex(${index})">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        function deleteStudentAtIndex(index) {
+            students.splice(index, 1);
+            displayStudents();
+        }
+
+        function searchStudent() {
+            const searchName = document.getElementById("searchName").value;
+            const student = students.find(s => s.name.toLowerCase() === searchName.toLowerCase());
+
+            if (student) {
+                alert(`Student Found: ${student.name}, Gender: ${student.gender}, HSC Marks: ${student.hscMark}, Parent Income: ${student.parentIncome}, Aadhar No: ${student.aadharNo}, Account No: ${student.accountNo}`);
+            } else {
+                alert("Student not found.");
+            }
+        }
+
+        function deleteStudent() {
+            const deleteName = document.getElementById("deleteName").value;
+            const index = students.findIndex(s => s.name.toLowerCase() === deleteName.toLowerCase());
+
+            if (index !== -1) {
+                students.splice(index, 1);
+                displayStudents();
+            } else {
+                alert("Student not found.");
+            }
+        }
+
+        function modifyStudent() {
+            const modifyName = document.getElementById("modifyName").value;
+            const newName = document.getElementById("newName").value;
+
+            const student = students.find(s => s.name.toLowerCase() === modifyName.toLowerCase());
+
+            if (student) {
+                student.name = newName;
+                displayStudents();
+            } else {
+                alert("Student not found.");
+            }
+        }
+
+        function clearInputs() {
+            document.getElementById("name").value = '';
+            document.getElementById("gender").value = '';
+            document.getElementById("hscMark").value = '';
+            document.getElementById("parentIncome").value = '';
+            document.getElementById("aadharNo").value = '';
+            document.getElementById("accountNo").value = '';
+        }
+    </script>
+</body>
+</html>
